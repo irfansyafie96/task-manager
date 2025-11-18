@@ -1,14 +1,31 @@
-package com.irfan.task_manager.controller; // This line should already be there
+package com.irfan.task_manager.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.irfan.task_manager.model.Task;
+import com.irfan.task_manager.service.TaskService;
+import org.springframework.web.bind.annotation.*;
 
-@RestController // 1. Tells Spring this is a Controller
+import java.util.List;
+
+@RestController
+@RequestMapping("/tasks") // 1. Base URL for all methods in this class
 public class TaskController {
 
-    @GetMapping("/hello") // 2. Maps this method to a URL
-    public String sayHello() {
-        return "Hello, World!";
+    private final TaskService taskService;
+
+    // 2. Inject the Service (The "Brain")
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
+    // 3. GET /tasks - Fetch all tasks
+    @GetMapping
+    public List<Task> getAllTasks() {
+        return taskService.getAllTasks();
+    }
+
+    // 4. POST /tasks - Create a new task
+    @PostMapping
+    public Task createTask(@RequestBody Task task) { // 5. Map JSON to Java Object
+        return taskService.createTask(task);
+    }
 }
